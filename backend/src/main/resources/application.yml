@@ -1,0 +1,54 @@
+spring:
+  application:
+    name: merryblue-api
+
+  datasource:
+   
+    url: jdbc:postgresql://db.iwfnddwkzzbnyzxylmcb.supabase.co:5432/postgres?sslmode=require
+    username: postgres
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none          
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        default_schema: public
+        format_sql: true
+
+server:
+  port: 8080
+  servlet:
+    context-path: /
+
+# Supabase config
+supabase:
+  url: https://iwfnddwkzzbnyzxylmcb.supabase.co
+  anon-key: ${SUPABASE_ANON_KEY}
+  service-role-key: ${SUPABASE_SERVICE_ROLE_KEY} 
+  jwt-secret: ${SUPABASE_JWT_SECRET}
+
+# CORS - cho phép frontend React dev server
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - http://localhost:3000
+      - http://localhost:8080
+      - https://merryblue.llc  # production domain (nếu có)
+
+# Swagger UI
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
+    operations-sorter: method
+
+logging:
+  level:
+    com.merryblue: DEBUG
+    org.springframework.security: INFO
