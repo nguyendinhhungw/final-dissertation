@@ -5,7 +5,10 @@ import com.merryblue.api.mapper.SiteContentMapper;
 import com.merryblue.api.model.SiteContent;
 import com.merryblue.api.repository.SiteContentRepository;
 import com.merryblue.api.exception.ResourceNotFoundException;
+import com.merryblue.api.exception.BadRequestException;
 import lombok.RequiredArgsConstructor;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,10 +28,11 @@ public class SiteContentService {
                 .stream().map(siteContentMapper::toDTO).collect(Collectors.toList());
     }
 
+    @Cacheable(value = "siteContent", key = "#key")
     public SiteContentDTO getContentByKey(String key) {
-        return siteContentRepository.findByKey(key)
-                .map(siteContentMapper::toDTO)
-                .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
+        SiteContent content = siteContentRepository.findByKey(key)
+                .orElseThrow(() -> new BadRequestException("Content not found for key: " + key));
+        return siteContentMapper.toDTO(content);
     }
 
     public SiteContent getEntityByKey(String key) {
@@ -37,6 +41,7 @@ public class SiteContentService {
     }
 
     @Transactional
+    @CacheEvict(value = "siteContent", key = "#key")
     public SiteContentDTO updateContent(String key, SiteContentDTO updatedDTO) {
         SiteContent existing = getEntityByKey(key);
         existing.setValueVi(updatedDTO.getValueVi());
