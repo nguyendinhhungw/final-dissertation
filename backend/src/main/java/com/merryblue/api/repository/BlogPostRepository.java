@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface BlogPostRepository extends JpaRepository<BlogPost, UUID> {
+public interface BlogPostRepository extends JpaRepository<BlogPost, UUID>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<BlogPost> {
     Optional<BlogPost> findBySlug(String slug);
     List<BlogPost> findByIsPublishedTrueOrderByDisplayOrderAsc();
     List<BlogPost> findAllByOrderByDisplayOrderAsc();

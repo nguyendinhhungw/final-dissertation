@@ -1,8 +1,7 @@
 package com.merryblue.api.controller;
 
-import com.merryblue.api.model.*;
-import com.merryblue.api.repository.*;
-import com.merryblue.api.exception.ResourceNotFoundException;
+import com.merryblue.api.dto.*;
+import com.merryblue.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,143 +13,126 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class AdminController {
 
-    private final ServiceRepository serviceRepository;
-    private final PortfolioProjectRepository portfolioProjectRepository;
-    private final BlogPostRepository blogPostRepository;
-    private final JobRepository jobRepository;
-    private final JobApplicationRepository applicationRepository;
-    private final ContactRepository contactRepository;
+    private final BusinessServiceService businessServiceService;
+    private final PortfolioService portfolioService;
+    private final BlogPostService blogPostService;
+    private final JobService jobService;
+    private final ApplicationService applicationService;
+    private final ContactService contactService;
 
     // --- SERVICES ---
     @GetMapping("/services")
-    public List<Service> getAllServices() {
-        return serviceRepository.findAllByOrderByDisplayOrderAsc();
+    public List<ServiceDTO> getAllServices() {
+        return businessServiceService.getAllServices(false);
     }
 
     @PostMapping("/services")
-    public Service createService(@RequestBody Service service) {
-        return serviceRepository.save(service);
+    public ServiceDTO createService(@RequestBody ServiceDTO service) {
+        return businessServiceService.createService(service);
     }
 
     @PutMapping("/services/{id}")
-    public Service updateService(@PathVariable UUID id, @RequestBody Service updated) {
-        Service existing = serviceRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Service not found"));
-        updated.setId(existing.getId());
-        updated.setCreatedAt(existing.getCreatedAt());
-        return serviceRepository.save(updated);
+    public ServiceDTO updateService(@PathVariable UUID id, @RequestBody ServiceDTO updated) {
+        return businessServiceService.updateService(id, updated);
     }
 
     @DeleteMapping("/services/{id}")
     public void deleteService(@PathVariable UUID id) {
-        serviceRepository.deleteById(id);
+        businessServiceService.deleteService(id);
     }
 
     // --- PORTFOLIO ---
     @GetMapping("/portfolio")
-    public List<PortfolioProject> getAllPortfolio() {
-        return portfolioProjectRepository.findAllByOrderByDisplayOrderAsc();
+    public List<PortfolioProjectDTO> getAllPortfolio() {
+        return portfolioService.getAllProjects(false);
     }
 
     @PostMapping("/portfolio")
-    public PortfolioProject createPortfolio(@RequestBody PortfolioProject project) {
-        return portfolioProjectRepository.save(project);
+    public PortfolioProjectDTO createPortfolio(@RequestBody PortfolioProjectDTO project) {
+        return portfolioService.createProject(project);
     }
 
     @PutMapping("/portfolio/{id}")
-    public PortfolioProject updatePortfolio(@PathVariable UUID id, @RequestBody PortfolioProject updated) {
-        PortfolioProject existing = portfolioProjectRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        updated.setId(existing.getId());
-        updated.setCreatedAt(existing.getCreatedAt());
-        return portfolioProjectRepository.save(updated);
+    public PortfolioProjectDTO updatePortfolio(@PathVariable UUID id, @RequestBody PortfolioProjectDTO updated) {
+        return portfolioService.updateProject(id, updated);
     }
 
     @DeleteMapping("/portfolio/{id}")
     public void deletePortfolio(@PathVariable UUID id) {
-        portfolioProjectRepository.deleteById(id);
+        portfolioService.deleteProject(id);
     }
 
     // --- BLOG ---
     @GetMapping("/blog")
-    public List<BlogPost> getAllBlogPosts() {
-        return blogPostRepository.findAllByOrderByDisplayOrderAsc();
+    public List<BlogPostDTO> getAllBlogPosts() {
+        return blogPostService.getAllPosts(false);
     }
 
     @PostMapping("/blog")
-    public BlogPost createBlogPost(@RequestBody BlogPost post) {
-        return blogPostRepository.save(post);
+    public BlogPostDTO createBlogPost(@RequestBody BlogPostDTO post) {
+        return blogPostService.createPost(post);
     }
 
     @PutMapping("/blog/{id}")
-    public BlogPost updateBlogPost(@PathVariable UUID id, @RequestBody BlogPost updated) {
-        BlogPost existing = blogPostRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        updated.setId(existing.getId());
-        updated.setCreatedAt(existing.getCreatedAt());
-        return blogPostRepository.save(updated);
+    public BlogPostDTO updateBlogPost(@PathVariable UUID id, @RequestBody BlogPostDTO updated) {
+        return blogPostService.updatePost(id, updated);
     }
 
     @DeleteMapping("/blog/{id}")
     public void deleteBlogPost(@PathVariable UUID id) {
-        blogPostRepository.deleteById(id);
+        blogPostService.deletePost(id);
     }
 
     // --- JOBS ---
     @GetMapping("/jobs")
-    public List<Job> getAllJobs() {
-        return jobRepository.findAllByOrderByDisplayOrderAsc();
+    public List<JobDTO> getAllJobs() {
+        return jobService.getAllJobs(false);
     }
 
     @PostMapping("/jobs")
-    public Job createJob(@RequestBody Job job) {
-        return jobRepository.save(job);
+    public JobDTO createJob(@RequestBody JobDTO job) {
+        return jobService.createJob(job);
     }
 
     @PutMapping("/jobs/{id}")
-    public Job updateJob(@PathVariable UUID id, @RequestBody Job updated) {
-        Job existing = jobRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        updated.setId(existing.getId());
-        updated.setCreatedAt(existing.getCreatedAt());
-        return jobRepository.save(updated);
+    public JobDTO updateJob(@PathVariable UUID id, @RequestBody JobDTO updated) {
+        return jobService.updateJob(id, updated);
     }
 
     @DeleteMapping("/jobs/{id}")
     public void deleteJob(@PathVariable UUID id) {
-        jobRepository.deleteById(id);
+        jobService.deleteJob(id);
     }
 
     // --- APPLICATIONS ---
     @GetMapping("/applications")
-    public List<JobApplication> getAllApplications() {
-        return applicationRepository.findAllByOrderByCreatedAtDesc();
+    public List<JobApplicationDTO> getAllApplications() {
+        return applicationService.getAllApplications();
     }
 
     @PutMapping("/applications/{id}")
-    public JobApplication updateApplicationStatus(@PathVariable UUID id, @RequestBody JobApplication updated) {
-        JobApplication existing = applicationRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        existing.setStatus(updated.getStatus());
-        existing.setAdminNotes(updated.getAdminNotes());
-        return applicationRepository.save(existing);
+    public JobApplicationDTO updateApplicationStatus(@PathVariable UUID id, @RequestBody JobApplicationDTO updated) {
+        return applicationService.updateStatus(id, updated.getStatus(), updated.getAdminNotes());
     }
 
     @DeleteMapping("/applications/{id}")
     public void deleteApplication(@PathVariable UUID id) {
-        applicationRepository.deleteById(id);
+        applicationService.deleteApplication(id);
     }
 
     // --- CONTACTS ---
     @GetMapping("/contacts")
-    public List<Contact> getAllContacts() {
-        return contactRepository.findAllByOrderByCreatedAtDesc();
+    public List<ContactDTO> getAllContacts() {
+        return contactService.getAllContacts();
     }
 
     @PutMapping("/contacts/{id}/read")
-    public Contact markContactRead(@PathVariable UUID id) {
-        Contact existing = contactRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Not found"));
-        existing.setIsRead(true);
-        return contactRepository.save(existing);
+    public ContactDTO markContactRead(@PathVariable UUID id) {
+        return contactService.markAsRead(id);
     }
 
     @DeleteMapping("/contacts/{id}")
     public void deleteContact(@PathVariable UUID id) {
-        contactRepository.deleteById(id);
+        contactService.deleteContact(id);
     }
 }

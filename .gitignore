@@ -35,3 +35,6 @@ build/
 application-local.yml
 application-local.properties
 .env
+
+implementation_plan.md
+walkthrough.md

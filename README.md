@@ -31,3 +31,18 @@ git clone <your-repo-url>
 Sửa file application.properties hoặc application.yml
 3. Chạy ứng dụng
 ./mvnw spring-boot:run
+🧱 Kiến trúc hệ thống
+Dự án được tổ chức theo mô hình:
+backend/src/main/java/com/merryblue/api/
+├── aspect/      # AOP: Cross-cutting concerns like global logging.
+├── config/      # Configurations: Security, JPA Auditing, Data Seeding.
+├── constant/    # Constants: Global strings and message codes.
+├── controller/  # REST Controllers: API endpoints (Admin, Public, User).
+├── dto/         # Data Transfer Objects: Request/Response schemas.
+├── exception/   # Error Handling: Custom exceptions and global advice.
+├── mapper/      # Mappers: Entity-to-DTO conversion logic.
+├── model/       # Entities: JPA database models and BaseEntity.
+├── repository/  # Data Access: Spring Data JPA and Specifications.
+├── security/    # Auth: JWT filtering and UserPrincipal logic.
+├── service/     # Business Logic: Service interfaces and implementations.
+└── util/        # Utilities: Helper classes for Date, File, and Security.

@@ -1,8 +1,7 @@
 package com.merryblue.api.controller;
 
-import com.merryblue.api.model.*;
-import com.merryblue.api.repository.*;
-import com.merryblue.api.exception.ResourceNotFoundException;
+import com.merryblue.api.dto.*;
+import com.merryblue.api.service.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,66 +12,64 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PublicController {
 
-    private final ServiceRepository serviceRepository;
-    private final PortfolioProjectRepository portfolioProjectRepository;
-    private final BlogPostRepository blogPostRepository;
-    private final JobRepository jobRepository;
-    private final SiteContentRepository siteContentRepository;
+    private final BusinessServiceService businessServiceService;
+    private final PortfolioService portfolioService;
+    private final BlogPostService blogPostService;
+    private final JobService jobService;
+    private final SiteContentService siteContentService;
 
     @GetMapping("/services")
-    public List<Service> getServices() {
-        return serviceRepository.findByIsPublishedTrueOrderByDisplayOrderAsc();
+    public List<ServiceDTO> getServices() {
+        return businessServiceService.getAllServices(true);
     }
 
     @GetMapping("/services/{slug}")
-    public Service getService(@PathVariable String slug) {
-        return serviceRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Service not found"));
+    public ServiceDTO getService(@PathVariable String slug) {
+        return businessServiceService.getServiceBySlug(slug);
     }
 
     @GetMapping("/portfolio")
-    public List<PortfolioProject> getPortfolio() {
-        return portfolioProjectRepository.findByIsPublishedTrueOrderByDisplayOrderAsc();
+    public List<PortfolioProjectDTO> getPortfolio() {
+        return portfolioService.getAllProjects(true);
     }
 
     @GetMapping("/portfolio/{slug}")
-    public PortfolioProject getProject(@PathVariable String slug) {
-        return portfolioProjectRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Project not found"));
+    public PortfolioProjectDTO getProject(@PathVariable String slug) {
+        return portfolioService.getProjectBySlug(slug);
     }
 
     @GetMapping("/blog")
-    public List<BlogPost> getBlogPosts() {
-        return blogPostRepository.findByIsPublishedTrueOrderByDisplayOrderAsc();
+    public List<BlogPostDTO> getBlogPosts() {
+        return blogPostService.getAllPosts(true);
     }
 
     @GetMapping("/blog/{slug}")
-    public BlogPost getBlogPost(@PathVariable String slug) {
-        BlogPost post = blogPostRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Blog post not found"));
-        post.setViews(post.getViews() + 1);
-        return blogPostRepository.save(post);
+    public BlogPostDTO getBlogPost(@PathVariable String slug) {
+        return blogPostService.incrementViews(slug);
     }
 
     @GetMapping("/jobs")
-    public List<Job> getJobs() {
-        return jobRepository.findByIsOpenTrueOrderByDisplayOrderAsc();
+    public List<JobDTO> getJobs() {
+        return jobService.getAllJobs(true);
     }
 
     @GetMapping("/jobs/{slug}")
-    public Job getJob(@PathVariable String slug) {
-        return jobRepository.findBySlug(slug)
-                .orElseThrow(() -> new ResourceNotFoundException("Job not found"));
+    public JobDTO getJob(@PathVariable String slug) {
+        return jobService.getJobBySlug(slug);
     }
 
     @GetMapping("/site-content")
-    public List<SiteContent> getAllSiteContent() {
-        return siteContentRepository.findAll();
+    public List<SiteContentDTO> getAllSiteContent() {
+        return siteContentService.getAllContent();
     }
 
     @GetMapping("/site-content/{key}")
-    public SiteContent getSiteContent(@PathVariable String key) {
-        return siteContentRepository.findByKey(key)
-                .orElseThrow(() -> new ResourceNotFoundException("Content not found"));
+    public SiteContentDTO getSiteContent(@PathVariable String key) {
+        return siteContentService.getContentByKey(key);
+    }
+
+    @PostMapping("/contacts")
+    public ContactDTO sendContact(@jakarta.validation.Valid @RequestBody ContactDTO contactDTO) {
+        return contactService.createContact(contactDTO);
     }
 }
