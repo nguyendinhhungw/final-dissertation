@@ -9,8 +9,6 @@ import { Plus, Pencil, Trash2, Shield, UserCog, User as UserIcon } from 'lucide-
 import { toast } from 'sonner';
 import { useTranslation } from 'react-i18next';
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SERVICE_ROLE_KEY = import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY as string;
 
 type Role = 'admin' | 'hr' | 'user';
 interface UserRow { user_id: string; display_name: string | null; phone: string | null; created_at: string; role: Role; email?: string | null; }
@@ -18,67 +16,6 @@ interface UserRow { user_id: string; display_name: string | null; phone: string 
 const roleIcon = (r: Role) => r === 'admin' ? Shield : r === 'hr' ? UserCog : UserIcon;
 const roleColor = (r: Role) => r === 'admin' ? 'bg-gradient-primary text-primary-foreground' : r === 'hr' ? 'bg-accent text-accent-foreground' : 'bg-secondary text-secondary-foreground';
 
-/** Tạo user mới qua Supabase Auth Admin REST API */
-async function adminCreateUser(email: string, password: string, display_name: string, phone: string, role: Role) {
-  if (!SERVICE_ROLE_KEY) {
-    throw new Error('VITE_SUPABASE_SERVICE_ROLE_KEY chưa được cấu hình trong file .env');
-  }
-
-  // 1. Tạo user qua Auth Admin API
-  const createRes = await fetch(`${SUPABASE_URL}/auth/v1/admin/users`, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SERVICE_ROLE_KEY,
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-    },
-    body: JSON.stringify({
-      email,
-      password,
-      email_confirm: true,
-      user_metadata: { display_name: display_name || null },
-    }),
-  });
-
-  const created = await createRes.json();
-  if (!createRes.ok || created.error) {
-    throw new Error(created.error?.message || created.msg || 'Tạo user thất bại');
-  }
-
-  const newId: string = created.id;
-
-  // 2. Dùng admin client với service role để cập nhật profile + role
-  const { createClient } = await import('@supabase/supabase-js');
-  const adminClient = createClient(SUPABASE_URL, SERVICE_ROLE_KEY);
-
-  await adminClient.from('profiles').update({ phone: phone || null, display_name: display_name || null }).eq('user_id', newId);
-  if (role && role !== 'user') {
-    await adminClient.from('user_roles').delete().eq('user_id', newId);
-    await adminClient.from('user_roles').insert({ user_id: newId, role });
-  }
-
-  return newId;
-}
-
-/** Xoá user qua Supabase Auth Admin REST API */
-async function adminDeleteUser(user_id: string) {
-  if (!SERVICE_ROLE_KEY) {
-    throw new Error('VITE_SUPABASE_SERVICE_ROLE_KEY chưa được cấu hình trong file .env');
-  }
-
-  const res = await fetch(`${SUPABASE_URL}/auth/v1/admin/users/${user_id}`, {
-    method: 'DELETE',
-    headers: {
-      'apikey': SERVICE_ROLE_KEY,
-      'Authorization': `Bearer ${SERVICE_ROLE_KEY}`,
-    },
-  });
-
-  if (!res.ok) {
-    const body = await res.json().catch(() => ({}));
-    throw new Error(body?.error?.message || 'Xoá user thất bại');
-  }
-}
 
 const AdminUsers = () => {
   const { t, i18n } = useTranslation();
@@ -111,15 +48,17 @@ const AdminUsers = () => {
     if (!editing) return;
     if (creating) {
       if (!editing.email || !editing.password) return toast.error(t('admin.users.requireEmailPwd'));
-      try {
-        await adminCreateUser(editing.email, editing.password, editing.display_name, editing.phone, editing.role);
-        toast.success(`Đã tạo người dùng ${editing.role.toUpperCase()} mới thành công`);
-        setOpen(false);
-        load();
-      } catch (err: any) {
-        toast.error(err?.message || 'Tạo tài khoản thất bại');
-      }
-      return;
+      const { data, error } = await supabase.functions.invoke('admin-create-user', {
+        body: {
+          email: editing.email,
+          password: editing.password,
+          display_name: editing.display_name,
+          phone: editing.phone,
+          role: editing.role,
+        },
+      });
+      if (error || (data as any)?.error) return toast.error((data as any)?.error || error?.message || 'Tạo thất bại');
+      toast.success(`Đã tạo người dùng ${editing.role.toUpperCase()} mới thành công`);
     } else if (editing.user_id) {
       await supabase.from('profiles').update({ display_name: editing.display_name || null, phone: editing.phone || null }).eq('user_id', editing.user_id);
       await supabase.from('user_roles').delete().eq('user_id', editing.user_id);
@@ -133,13 +72,10 @@ const AdminUsers = () => {
 
   const deleteUser = async (user_id: string, name: string | null) => {
     if (!confirm(`Xoá vĩnh viễn người dùng "${name || user_id}"? Hành động này không thể hoàn tác.`)) return;
-    try {
-      await adminDeleteUser(user_id);
-      toast.success('Đã xoá người dùng');
-      load();
-    } catch (err: any) {
-      toast.error(err?.message || 'Xoá thất bại');
-    }
+    const { data, error } = await supabase.functions.invoke('admin-delete-user', { body: { user_id } });
+    if (error || (data as any)?.error) return toast.error((data as any)?.error || error?.message || 'Xoá thất bại');
+    toast.success('Đã xoá người dùng');
+    load();
   };
 
   return (
