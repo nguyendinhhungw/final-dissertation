@@ -40,87 +40,147 @@ Dự án này tập trung vào:
 
 ---
 
-🚀 Cách chạy project
-📦 Yêu cầu hệ thống
-Node.js (>= 18)
-npm hoặc yarn
-(Khuyến nghị) Git
-🔹 1. Clone repository
+## 🚀 Cách chạy project
+
+### 📦 Yêu cầu hệ thống
+
+* Node.js (>= 18)
+* npm hoặc yarn
+* (Khuyến nghị) Git
+
+---
+
+### 🔹 1. Clone repository
+
+```bash
 git clone <your-repo-url>
 cd <your-project-folder>
-🔹 2. Cài đặt dependencies (Frontend)
+```
+
+---
+
+### 🔹 2. Cài đặt dependencies (Frontend)
+
+```bash
 npm install
-🔹 3. Cấu hình Backend (Spring Boot)
+```
 
-Chỉnh sửa file cấu hình:
+---
 
-application.properties
-hoặc
-application.yml
+### 🔹 3. Cấu hình Backend (Spring Boot)
 
-👉 Cập nhật các thông tin:
+Chỉnh sửa file:
 
-Database connection
-JWT secret (nếu có)
-Các cấu hình cần thiết khác
-🔹 4. Chạy ứng dụng
-▶️ Backend (Spring Boot)
+* `application.properties`
+  hoặc
+* `application.yml`
+
+👉 Cập nhật:
+
+* Database connection
+* JWT secret (nếu có)
+* Các cấu hình cần thiết khác
+
+---
+
+### 🔹 4. Chạy ứng dụng
+
+#### ▶️ Backend (Spring Boot)
+
+```bash
 ./mvnw spring-boot:run
-▶️ Frontend (React + TypeScript)
+```
+
+#### ▶️ Frontend (React + TypeScript)
+
+```bash
 npm run dev
-🌐 Truy cập hệ thống
-Backend API: http://localhost:8080
-Frontend: http://localhost:3000 (hoặc port hiển thị trong terminal)
-🔐 Cấu hình môi trường (Environment Variables)
+```
 
-Dự án sử dụng file .env để lưu trữ các thông tin cấu hình quan trọng:
+---
 
-API Keys
-Database URL
-Supabase Keys
-Các biến môi trường khác
-⚠️ Lưu ý bảo mật
-File .env KHÔNG được commit lên GitHub
-File này đã được thêm vào .gitignore
-Điều này nhằm bảo vệ dữ liệu và tránh rò rỉ thông tin nhạy cảm
-📩 Truy cập hệ thống & dữ liệu
+### 🌐 Truy cập hệ thống
 
-Vì đây là đề tài khóa luận tốt nghiệp, một số thông tin được giới hạn truy cập nhằm đảm bảo tính bảo mật.
+http://localhost:8080(hoặc port hiển thị trong terminal)*
 
-👉 Nếu bạn cần:
-Chạy project đầy đủ
-Truy cập hệ thống
-Trải nghiệm giao diện quản trị (Admin Dashboard)
+---
 
-Vui lòng liên hệ qua email:
+## 🔐 Cấu hình môi trường (Environment Variables)
 
-📧 Email: dinhhung110310@gmail.com
+Dự án sử dụng file `.env` để lưu trữ:
 
-📦 Thông tin sẽ được cung cấp
-File .env cấu hình môi trường
-Tài khoản Admin để truy cập hệ thống
-🔒 Quy định sử dụng
-Chỉ sử dụng cho mục đích:
-Học tập
-Đánh giá đồ án
-Không chia sẻ lại hoặc sử dụng vào mục đích thương mại
-🧱 Kiến trúc hệ thống (Backend)
+* API Keys
+* Database URL
+* Supabase Keys
+* Các biến môi trường khác
+
+### ⚠️ Lưu ý bảo mật
+
+* File `.env` **KHÔNG được commit lên GitHub**
+* File đã được thêm vào `.gitignore`
+* Điều này giúp tránh rò rỉ thông tin nhạy cảm
+
+---
+
+## 📩 Truy cập hệ thống & dữ liệu
+
+Vì đây là **đề tài khóa luận tốt nghiệp**, một số thông tin được giới hạn.
+
+### 👉 Nếu bạn cần:
+
+* Chạy project đầy đủ
+* Truy cập hệ thống
+* Trải nghiệm Admin Dashboard
+
+📧 **Liên hệ:** [dinhhung110310@gmail.com](mailto:dinhhung110310@gmail.com)
+
+---
+
+### 📦 Thông tin sẽ được cung cấp
+
+* File `.env`
+* Tài khoản Admin
+
+---
+
+### 🔒 Quy định sử dụng
+
+* Chỉ phục vụ:
+
+  * Học tập
+  * Đánh giá đồ án
+* Không chia sẻ lại hoặc dùng cho mục đích thương mại
+
+---
+
+## 🧱 Kiến trúc hệ thống (Backend)
+
+```bash
 backend/src/main/java/com/merryblue/api/
-├── aspect/      # AOP: Logging, xử lý cross-cutting concerns
-├── config/      # Security, JPA Auditing, Data Seeding
-├── constant/    # Hằng số & message code
-├── controller/  # REST API (Admin, Public, User)
-├── dto/         # Request / Response objects
-├── exception/   # Global Exception Handling
-├── mapper/      # Mapping Entity ↔ DTO
-├── model/       # JPA Entities & BaseEntity
-├── repository/  # Data Access Layer (Spring Data JPA)
-├── security/    # JWT & Authentication
-├── service/     # Business Logic
-└── util/        # Helper Utilities
-💡 Ghi chú
-Kiểm tra đúng phiên bản Node.js trước khi chạy
-Đảm bảo file .env đã được cấu hình đầy đủ
-Restart server sau khi thay đổi biến môi trường
-👨‍💻 Liên hệ
-📧 Email: dinhhung110310@gmail.com
+├── aspect/      # Logging, AOP
+├── config/      # Security, JPA, Data Seeding
+├── constant/    # Constants
+├── controller/  # REST API
+├── dto/         # Request/Response
+├── exception/   # Error handling
+├── mapper/      # Mapping
+├── model/       # Entities
+├── repository/  # Data access
+├── security/    # JWT
+├── service/     # Business logic
+└── util/        # Utilities
+```
+
+---
+
+## 💡 Ghi chú
+
+* Kiểm tra đúng version Node.js
+* Đảm bảo `.env` đã cấu hình
+* Restart server nếu thay đổi env
+
+---
+
+## 👨‍💻 Liên hệ
+
+📧 [dinhhung110310@gmail.com](mailto:dinhhung110310@gmail.com)
