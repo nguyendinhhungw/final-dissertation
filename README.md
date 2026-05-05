@@ -50,12 +50,12 @@ npm hoặc yarn
 git clone <your-repo-url>
 Cài đặt dependencies: npm install
 
-2. Cấu hình database
+### 2. Cấu hình database
 
 application.properties
 hoặc
 application.yml
-3. Chạy ứng dụng
+### 3. Chạy ứng dụng
 ./mvnw spring-boot:run
 npm run dev
 👉 Sau khi chạy thành công, truy cập:
