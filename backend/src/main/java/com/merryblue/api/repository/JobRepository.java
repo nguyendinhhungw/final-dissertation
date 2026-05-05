@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface JobRepository extends JpaRepository<Job, UUID> {
+public interface JobRepository extends JpaRepository<Job, UUID>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<Job> {
     Optional<Job> findBySlug(String slug);
     List<Job> findByIsOpenTrueOrderByDisplayOrderAsc();
     List<Job> findAllByOrderByDisplayOrderAsc();

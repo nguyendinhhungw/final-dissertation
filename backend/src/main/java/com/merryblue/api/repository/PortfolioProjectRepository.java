@@ -9,7 +9,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface PortfolioProjectRepository extends JpaRepository<PortfolioProject, UUID> {
+public interface PortfolioProjectRepository extends JpaRepository<PortfolioProject, UUID>, org.springframework.data.jpa.repository.JpaSpecificationExecutor<PortfolioProject> {
     Optional<PortfolioProject> findBySlug(String slug);
     List<PortfolioProject> findByIsPublishedTrueOrderByDisplayOrderAsc();
     List<PortfolioProject> findAllByOrderByDisplayOrderAsc();
