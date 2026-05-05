@@ -40,86 +40,87 @@ Dự án này tập trung vào:
 
 ---
 
-## 🚀 Cách chạy project
+🚀 Cách chạy project
 📦 Yêu cầu hệ thống
 Node.js (>= 18)
 npm hoặc yarn
 (Khuyến nghị) Git
-### 1. Clone repository
-```bash
+🔹 1. Clone repository
 git clone <your-repo-url>
-Cài đặt dependencies: npm install
+cd <your-project-folder>
+🔹 2. Cài đặt dependencies (Frontend)
+npm install
+🔹 3. Cấu hình Backend (Spring Boot)
 
-### 2. Cấu hình database
+Chỉnh sửa file cấu hình:
 
 application.properties
 hoặc
 application.yml
-### 3. Chạy ứng dụng
-./mvnw spring-boot:run
-npm run dev
-👉 Sau khi chạy thành công, truy cập:
-http://localhost:8080
 
-(hoặc port được trả về trong terminal)
+👉 Cập nhật các thông tin:
+
+Database connection
+JWT secret (nếu có)
+Các cấu hình cần thiết khác
+🔹 4. Chạy ứng dụng
+▶️ Backend (Spring Boot)
+./mvnw spring-boot:run
+▶️ Frontend (React + TypeScript)
+npm run dev
+🌐 Truy cập hệ thống
+Backend API: http://localhost:8080
+Frontend: http://localhost:3000 (hoặc port hiển thị trong terminal)
 🔐 Cấu hình môi trường (Environment Variables)
 
-Dự án sử dụng file .env để lưu trữ các biến môi trường quan trọng như:
+Dự án sử dụng file .env để lưu trữ các thông tin cấu hình quan trọng:
 
-API keys
+API Keys
 Database URL
-Supabase keys
-Các thông tin cấu hình hệ thống
-
-⚠️ Lưu ý quan trọng về bảo mật:
-
+Supabase Keys
+Các biến môi trường khác
+⚠️ Lưu ý bảo mật
 File .env KHÔNG được commit lên GitHub
 File này đã được thêm vào .gitignore
-Điều này nhằm đảm bảo an toàn cho hệ thống và dữ liệu
-📩 Cách lấy file .env và tài khoản truy cập
+Điều này nhằm bảo vệ dữ liệu và tránh rò rỉ thông tin nhạy cảm
+📩 Truy cập hệ thống & dữ liệu
 
-
-
-
-🧱 Kiến trúc hệ thống
-
-Dự án được tổ chức theo mô hình:
-
-backend/src/main/java/com/merryblue/api/
-├── aspect/      # AOP: Cross-cutting concerns (logging, etc.)
-├── config/      # Security, JPA Auditing, Data Seeding
-├── constant/    # Constants & message codes
-├── controller/  # REST API endpoints (Admin, Public, User)
-├── dto/         # Request/Response objects
-├── exception/   # Global error handling
-├── mapper/      # Entity ↔ DTO mapping
-├── model/       # JPA Entities & BaseEntity
-├── repository/  # Data access (Spring Data JPA)
-├── security/    # JWT & authentication logic
-├── service/     # Business logic
-└── util/        # Helper utilities
-
-Vì đây là đề tài khóa luận tốt nghiệp, để đảm bảo tính bảo mật:
+Vì đây là đề tài khóa luận tốt nghiệp, một số thông tin được giới hạn truy cập nhằm đảm bảo tính bảo mật.
 
 👉 Nếu bạn cần:
-
 Chạy project đầy đủ
 Truy cập hệ thống
-Xem giao diện quản trị (Admin Dashboard)
+Trải nghiệm giao diện quản trị (Admin Dashboard)
 
-Vui lòng liên hệ trực tiếp qua email:
+Vui lòng liên hệ qua email:
 
-📧 Email: [dinhhung110310@gmail.com]
+📧 Email: dinhhung110310@gmail.com
 
-Bạn sẽ được cung cấp:
-
-File .env cần thiết
-Tài khoản admin để trải nghiệm toàn bộ chức năng hệ thống
-
+📦 Thông tin sẽ được cung cấp
+File .env cấu hình môi trường
+Tài khoản Admin để truy cập hệ thống
+🔒 Quy định sử dụng
+Chỉ sử dụng cho mục đích:
+Học tập
+Đánh giá đồ án
+Không chia sẻ lại hoặc sử dụng vào mục đích thương mại
+🧱 Kiến trúc hệ thống (Backend)
+backend/src/main/java/com/merryblue/api/
+├── aspect/      # AOP: Logging, xử lý cross-cutting concerns
+├── config/      # Security, JPA Auditing, Data Seeding
+├── constant/    # Hằng số & message code
+├── controller/  # REST API (Admin, Public, User)
+├── dto/         # Request / Response objects
+├── exception/   # Global Exception Handling
+├── mapper/      # Mapping Entity ↔ DTO
+├── model/       # JPA Entities & BaseEntity
+├── repository/  # Data Access Layer (Spring Data JPA)
+├── security/    # JWT & Authentication
+├── service/     # Business Logic
+└── util/        # Helper Utilities
 💡 Ghi chú
-Nếu gặp lỗi khi chạy project, hãy kiểm tra:
-Phiên bản Node.js
-File .env đã được cấu hình đúng chưa
-Có thể cần restart server sau khi thay đổi biến môi trường
-👨‍💻 Liên hệ .
-Email: [dinhhung110310@gmail.com]
+Kiểm tra đúng phiên bản Node.js trước khi chạy
+Đảm bảo file .env đã được cấu hình đầy đủ
+Restart server sau khi thay đổi biến môi trường
+👨‍💻 Liên hệ
+📧 Email: dinhhung110310@gmail.com
